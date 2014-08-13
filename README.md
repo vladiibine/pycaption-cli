@@ -30,6 +30,7 @@ Supported Formats
  - SRT (read/write)
  - SAMI (read/write)
  - DFXP (read/write)
+ - VTT (read/write)
  - Transcript (write)
  
 License
