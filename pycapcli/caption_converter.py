@@ -46,7 +46,7 @@ def main():
     except:
         raise Exception(
         ('Expected usage: python caption_converter.py <path to caption file> ',
-        '[--sami --dfxp --srt --transcript -vtt]'))
+        '[--sami --dfxp --srt --transcript --vtt]'))
 
     try:
         captions = codecs.open(filename, encoding='utf-8', mode='r').read()
@@ -85,15 +85,15 @@ def read_captions(captions, options):
 
 def write_captions(content, options):
     if options.sami:
-        print pycaption.SAMIWriter().write(content).encode("utf-8")
+        print (pycaption.SAMIWriter().write(content).encode("utf-8"))
     if options.dfxp:
-        print pycaption.DFXPWriter().write(content).encode("utf-8")
+        print (pycaption.DFXPWriter().write(content).encode("utf-8"))
     if options.srt:
-        print pycaption.SRTWriter().write(content).encode("utf-8")
+        print (pycaption.SRTWriter().write(content).encode("utf-8"))
     if options.transcript:
-        print pycaption.TranscriptWriter().write(content).encode("utf-8")
+        print (pycaption.TranscriptWriter().write(content).encode("utf-8"))
     if options.vtt:
-        print pycaption.WebVTTWriter().write(content).encode("utf-8")    
+        print (pycaption.WebVTTWriter().write(content).encode("utf-8"))    
 
 
 if __name__ == '__main__':
