@@ -17,11 +17,11 @@ From your command line:
     
 e.g.
 
-    pycaption ../jnorton-caption.scc --dfxp --transcript
+    pycaption ../caption.scc --dfxp --transcript
 
 Output is written to the screen. To write to a file, use something like this:
 
-    pycaption ../jnorton-caption.scc --dfxp > jnorton.xml
+    pycaption ../caption.scc --dfxp > caption.xml
 
 Supported Formats
 =================
@@ -32,7 +32,12 @@ Supported Formats
  - DFXP (read/write)
  - VTT (read/write)
  - Transcript (write)
- 
+
+Extra parameters
+=================
+
+ - read_invalid_positioning (a bool parameter with this key will be passed to all readers who accept it)
+
 License
 =======
 
