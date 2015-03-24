@@ -39,6 +39,14 @@ def main():
             dest='offset',
             help="choose offset for SCC file; measured in seconds",
             default=0)
+    parser.add_option(
+        "--read_invalid_positioning",
+        dest="read_invalid_positioning",
+        help="Whether to try to read the invalidly specified positioning "
+             "information",
+        action="store_true",
+        default=False
+    )
     (options, args) = parser.parse_args()
 
     try:
@@ -59,11 +67,13 @@ def main():
 
 
 def read_captions(captions, options):
-    scc_reader = pycaption.SCCReader()
-    srt_reader = pycaption.SRTReader()
-    sami_reader = pycaption.SAMIReader()
-    dfxp_reader = pycaption.DFXPReader()
-    vtt_reader = pycaption.WebVTTReader()
+    kwargs = {'read_invalid_positioning': options.read_invalid_positioning}
+
+    scc_reader = pycaption.SCCReader(**kwargs)
+    srt_reader = pycaption.SRTReader(**kwargs)
+    sami_reader = pycaption.SAMIReader(**kwargs)
+    dfxp_reader = pycaption.DFXPReader(**kwargs)
+    vtt_reader = pycaption.WebVTTReader(**kwargs)
 
     if scc_reader.detect(captions):
         if options.lang:
