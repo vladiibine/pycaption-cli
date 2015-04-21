@@ -36,7 +36,7 @@ Supported Formats
 Extra parameters
 =================
 
- - read_invalid_positioning (a bool parameter with this key will be passed to all readers who accept it)
+ - ```--read_invalid_positioning``` (a bool parameter with this key will be passed to all readers who accept it). This parameter has effect only on the DFXPReader currently. Its effect is that the reader will try to parse positioning info the best it can, even if it doesn't conform to the specs (for instance attributes like ```tts:origin``` that are specified on elements where they should have no meaning.
 
 License
 =======
