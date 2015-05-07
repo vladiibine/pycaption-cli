@@ -2,6 +2,7 @@ import optparse
 import codecs
 
 import pycaption
+import pycaption.dfxp
 
 
 def main():
@@ -16,6 +17,13 @@ def main():
             dest='dfxp',
             help="write captions in DFXP format",
             default=False,)
+    parser.add_option(
+        "--unpositioned_dfxp",
+        action='store_true',
+        dest='unpositioned_dfxp',
+        help="write captions in DFXP format, ignoring all positioning "
+             "information (will only use a default of bottom center)",
+        default=False,)
     parser.add_option("--srt",
             action='store_true',
             dest='srt',
@@ -47,6 +55,21 @@ def main():
         action="store_true",
         default=False
     )
+    parser.add_option(
+        "--video_height",
+        dest="video_height",
+        help="Required for relativization (converting measuring units to "
+             "percents). WebVTT requires the relativization of all units",
+        action="store"
+    )
+    parser.add_option(
+        "--video_width",
+        dest="video_width",
+        help="Required for relativization (converting measuring units to "
+             "percents). WebVTT requires the relativization of all units",
+        action="store"
+    )
+
     (options, args) = parser.parse_args()
 
     try:
@@ -54,7 +77,7 @@ def main():
     except:
         raise Exception(
         ('Expected usage: python caption_converter.py <path to caption file> ',
-        '[--sami --dfxp --srt --transcript --vtt]'))
+        '[--sami --dfxp --srt --transcript --vtt --unpositioned_dfxp]'))
 
     try:
         captions = codecs.open(filename, encoding='utf-8', mode='r').read()
@@ -67,13 +90,14 @@ def main():
 
 
 def read_captions(captions, options):
-    kwargs = {'read_invalid_positioning': options.read_invalid_positioning}
+    reader_kwargs = {
+        'read_invalid_positioning': options.read_invalid_positioning}
 
-    scc_reader = pycaption.SCCReader(**kwargs)
-    srt_reader = pycaption.SRTReader(**kwargs)
-    sami_reader = pycaption.SAMIReader(**kwargs)
-    dfxp_reader = pycaption.DFXPReader(**kwargs)
-    vtt_reader = pycaption.WebVTTReader(**kwargs)
+    scc_reader = pycaption.SCCReader(**reader_kwargs)
+    srt_reader = pycaption.SRTReader(**reader_kwargs)
+    sami_reader = pycaption.SAMIReader(**reader_kwargs)
+    dfxp_reader = pycaption.DFXPReader(**reader_kwargs)
+    vtt_reader = pycaption.WebVTTReader(**reader_kwargs)
 
     if scc_reader.detect(captions):
         if options.lang:
@@ -94,16 +118,25 @@ def read_captions(captions, options):
 
 
 def write_captions(content, options):
+    writer_kwargs = {
+        'video_width': int(options.video_width) if options.video_width else None,   # noqa
+        'video_height': int(options.video_height) if options.video_height else None  # noqa
+    }
     if options.sami:
-        print (pycaption.SAMIWriter().write(content).encode("utf-8"))
+        print(pycaption.SAMIWriter(**writer_kwargs).write(content).encode("utf-8"))  # noqa
     if options.dfxp:
-        print (pycaption.DFXPWriter().write(content).encode("utf-8"))
+        print(pycaption.DFXPWriter(**writer_kwargs).write(content).encode("utf-8"))  #noqa
     if options.srt:
-        print (pycaption.SRTWriter().write(content).encode("utf-8"))
+        print(pycaption.SRTWriter(**writer_kwargs).write(content).encode("utf-8"))  # noqa
     if options.transcript:
-        print (pycaption.TranscriptWriter().write(content).encode("utf-8"))
+        print(pycaption.TranscriptWriter(**writer_kwargs).write(content).encode("utf-8"))  # noqa
     if options.vtt:
-        print (pycaption.WebVTTWriter().write(content).encode("utf-8"))    
+        print(pycaption.WebVTTWriter(**writer_kwargs).write(content).encode("utf-8"))  # noqa
+    if options.unpositioned_dfxp:
+        print(
+            pycaption.dfxp.SinglePositioningDFXPWriter(**writer_kwargs)
+            .write(content).encode("utf-8")
+        )
 
 
 if __name__ == '__main__':

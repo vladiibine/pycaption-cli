@@ -13,7 +13,7 @@ Usage
 
 From your command line:
 
-    pycaption <path to caption file> [--sami --dfxp --srt --transcript]
+    pycaption <path to caption file> [--sami --dfxp --srt --transcript --vtt --unpositioned_dfxp]
     
 e.g.
 
@@ -37,6 +37,10 @@ Extra parameters
 =================
 
  - ```--read_invalid_positioning``` (a bool parameter with this key will be passed to all readers who accept it). This parameter has effect only on the DFXPReader currently. Its effect is that the reader will try to parse positioning info the best it can, even if it doesn't conform to the specs (for instance attributes like ```tts:origin``` that are specified on elements where they should have no meaning.
+
+- ```--video_height``` and ```--video_width```. These will serve when converting to webvtt, if the input source file has units other than percents. WebVTT will only output percent units, but in order to do this, the video height and witdh must be specified (so we know that 32px means 5% of 640 for instance)
+
+- ```--unpositioned_dfxp```. This acts like ```--dfxp```, but the file it outputs, will only contain a default positioning of bottom center, for every caption
 
 License
 =======
